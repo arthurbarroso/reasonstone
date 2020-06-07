@@ -1,3 +1,13 @@
+open Css;
+
+let baseStyle =
+  merge([
+    style([
+      height(`vh(100.0))
+    ]),
+    "base-style"
+  ]);
+
 [@react.component]
 let make = () => {
     let url = ReasonReactRouter.useUrl();
@@ -9,5 +19,7 @@ let make = () => {
     | _ => <div>{"Page not found" |> ReasonReact.string}</div>
     };
 
-  page
+  <div className=baseStyle>
+    page
+  </div>
 }

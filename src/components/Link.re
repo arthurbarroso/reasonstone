@@ -1,14 +1,18 @@
 open Css;
 
-let linkColor = (isHovering: bool) => isHovering ? hex("000666") : hex("333")
+let linkColor = (isHovering: bool) => isHovering ? hex("fcba03") : hex("333")
+let linkSize = (strong: bool) => strong ? px(32) : px(16);
 
-let linkStyle = (isHovering: bool) => {
+let linkStyle = (isHovering: bool, strong: bool) => {
   let usedColor = linkColor(isHovering);
+  let usedSize = linkSize(strong);
 
   merge([
     style([
-      fontSize(px(18)),
+      fontSize(usedSize),
       color(usedColor),
+      marginRight(px(6)),
+      cursor(`pointer)
     ]),
     "link-style"
   ])
@@ -23,7 +27,7 @@ type action =
   | ToggleHover;
 
 [@react.component]
-let make = (~name, ~href) => {
+let make = (~name, ~href, ~strong=false) => {
   let (state, dispatch) =
     React.useReducer(
       (state, action) =>
@@ -35,9 +39,18 @@ let make = (~name, ~href) => {
 
 
 
-  <a onMouseOver={_event => dispatch(ToggleHover)} 
-    onMouseOut={_event => dispatch(ToggleHover)} 
-    className=linkStyle(state.isHovering) 
-    onClick={handleClick(href)}>{name |> ReasonReact.string}
-  </a>
+  strong ? 
+      <h1
+        onMouseOver={_event => dispatch(ToggleHover)}
+        onMouseOut={_event => dispatch(ToggleHover)} 
+        className=linkStyle(state.isHovering, strong) 
+        onClick={handleClick(href)}>{name |> ReasonReact.string}
+      </h1>
+    : 
+      <a
+        onMouseOver={_event => dispatch(ToggleHover)}
+        onMouseOut={_event => dispatch(ToggleHover)} 
+        className=linkStyle(state.isHovering, strong) 
+        onClick={handleClick(href)}>{name |> ReasonReact.string}
+      </a>
 }

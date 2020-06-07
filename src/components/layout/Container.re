@@ -3,15 +3,21 @@ open Css;
 let containerStyle =
   merge([
     style([
-      background((hex("333")))  
+      display(flexBox),
+      paddingLeft(`percent(20.)),
+      paddingRight(`percent(20.)),
+      flexDirection(column),
+      alignItems(center),
     ]),
     "container"
   ]);
 
 
 [@react.component]
-let make = (~children: React.element) => 
-  <div className=containerStyle>
+let make = (~children: React.element) =>
+  <>
     <Navbar />
-    children
-  </div>
+    <div className=containerStyle>
+      children
+    </div>
+  </>
