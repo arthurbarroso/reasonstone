@@ -1,0 +1,93 @@
+# source: http://localhost:4000
+# timestamp: Sun Jun 07 2020 01:12:12 GMT-0300 (Brasilia Standard Time)
+
+"""Represents the card model"""
+type Card implements Node {
+  """The ID of an object"""
+  id: ID!
+  collectible: Int!
+  slug: String!
+  classId: Int!
+  multiClassIds: [String]
+  cardTypeId: Int!
+  rarityId: Int!
+  artistName: String!
+  manaCost: Int
+  name: String!
+  text: String!
+  image: String!
+  imageGold: String!
+  flavorText: String!
+  cropImage: String!
+  childIds: [String]
+}
+
+"""A connection to a list of items."""
+type CardConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+    This allows a client to fetch the first five objects by passing "5" as the
+    argument to "first", then fetch the total count so it could display "5 of 83",
+    for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [CardEdge]!
+}
+
+"""An edge in a connection."""
+type CardEdge {
+  """The item at the end of the edge"""
+  node: Card
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+"""Information about pagination in a connection."""
+type PageInfoExtended {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+"""Main query"""
+type Query {
+  """The ID of an object"""
+  id: ID!
+
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
+  card(after: String, first: Int, before: String, last: Int, id: ID!): Card
+  cards(after: String, first: Int, before: String, last: Int, search: String): CardConnection!
+}

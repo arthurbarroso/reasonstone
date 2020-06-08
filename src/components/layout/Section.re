@@ -12,7 +12,7 @@ let sectionStyle =
   ]);
 
 [@react.component]
-let make = (~title: option(string)=?, ~content: string) => {
+let make = (~title: option(string)=?, ~content: option(string)=?) => {
 
   let sectionTitle =
     switch(title){
@@ -20,8 +20,14 @@ let make = (~title: option(string)=?, ~content: string) => {
       | None => React.null;
     };
 
+  let sectionContent =
+    switch(content){
+      | Some(content) => <p>{ReasonReact.string(content)}</p>;
+      | None => React.null;
+    };
+
   <section className=sectionStyle>
     sectionTitle
-    <p>{content |> ReasonReact.string}</p>
+    sectionContent
   </section>
 }
