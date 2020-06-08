@@ -4,6 +4,8 @@ module Types = {
   type response_cards_edges_node = {
     text: string,
     name: string,
+    image: string,
+    manaCost: option(int),
   };
   type response_cards_edges = {node: option(response_cards_edges_node)};
   type response_cards = {edges: array(option(response_cards_edges))};
@@ -15,7 +17,7 @@ module Types = {
 module Internal = {
   type responseRaw;
   let responseConverter: Js.Dict.t(Js.Dict.t(Js.Dict.t(string))) = [%raw
-    {json| {"__root":{"cards_edges":{"na":""},"cards_edges_node":{"n":""}}} |json}
+    {json| {"__root":{"cards_edges":{"na":""},"cards_edges_node":{"n":""},"cards_edges_node_manaCost":{"n":""}}} |json}
   ];
   let responseConverterMap = ();
   let convertResponse = v =>
@@ -60,6 +62,20 @@ v1 = {
   "name": "name",
   "args": null,
   "storageKey": null
+},
+v2 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "image",
+  "args": null,
+  "storageKey": null
+},
+v3 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "manaCost",
+  "args": null,
+  "storageKey": null
 };
 return {
   "kind": "Request",
@@ -98,7 +114,9 @@ return {
                 "plural": false,
                 "selections": [
                   (v0/*: any*/),
-                  (v1/*: any*/)
+                  (v1/*: any*/),
+                  (v2/*: any*/),
+                  (v3/*: any*/)
                 ]
               }
             ]
@@ -141,6 +159,8 @@ return {
                 "selections": [
                   (v0/*: any*/),
                   (v1/*: any*/),
+                  (v2/*: any*/),
+                  (v3/*: any*/),
                   {
                     "kind": "ScalarField",
                     "alias": null,
@@ -160,7 +180,7 @@ return {
     "operationKind": "query",
     "name": "CardsQuery",
     "id": null,
-    "text": "query CardsQuery {\n  cards {\n    edges {\n      node {\n        text\n        name\n        id\n      }\n    }\n  }\n}\n",
+    "text": "query CardsQuery {\n  cards {\n    edges {\n      node {\n        text\n        name\n        image\n        manaCost\n        id\n      }\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

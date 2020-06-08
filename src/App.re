@@ -27,7 +27,10 @@ let make = () => {
     | _ => <div>{"Page not found" |> ReasonReact.string}</div>
     };
 
-  <div className=baseStyle>
-    page
-  </div>
+  let loading = <Loading />;
+    <div className=baseStyle>
+      <ReactExperimental.Suspense fallback=loading>
+        page
+      </ReactExperimental.Suspense>
+    </div>
 }
