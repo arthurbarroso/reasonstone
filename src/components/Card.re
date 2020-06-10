@@ -1,7 +1,14 @@
 [@react.component]
 
-let make = (~name: option(string)=?, ~text: option(string)=?, ~image: option(string)=?, ~manaCost: option(string)=?) => {
-  let cardName =
+let make = (~image: option(string)=?) => {
+
+  let cardImg =
+    switch(image){
+      | None => React.null;
+      | Some(image) => <img src=image alt="card-image" />
+    };
+/* 
+    let cardName =
     switch(name){
       | None => React.null;
       | Some(name) => <h1>{ReasonReact.string(name)}</h1>
@@ -11,24 +18,13 @@ let make = (~name: option(string)=?, ~text: option(string)=?, ~image: option(str
     switch(text){
       | None => React.null;
       | Some(text) => <p>{ReasonReact.string(text)}</p>
-    };
-
-  let cardImg =
-    switch(image){
-      | None => React.null;
-      | Some(image) => <img src=image alt="card-image" />
-    };
+    }; */
   
-  let cardMana =
+  /* let cardMana =
     switch(manaCost){
       | None => React.null;
-      | Some(manaCost) => <p>{ReasonReact.string(manaCost)}</p>
-    };
+      | Some(manaCost) => <p>{ReasonReact.string(string_of_int(manaCost))}</p>
+    }; */
 
-    <div>
-      cardName
-      cardImg
-      cardMana
-      cardText
-    </div>
+    cardImg;
 }

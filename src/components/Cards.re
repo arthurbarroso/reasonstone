@@ -1,3 +1,5 @@
+open Css;
+
 module CardsQuery = [%relay.query{|
     query CardsQuery {
       cards {
@@ -14,6 +16,18 @@ module CardsQuery = [%relay.query{|
   |}];
 
 
+let cardsContainerStyle =
+  merge([
+    style([
+      display(flexBox),
+      flexDirection(row),
+      justifyContent(center),
+      width(`percent(120.0)),
+      flexWrap(wrap),
+      listStyle(`none, `inside, `none),
+    ]),
+    "cards-container"
+  ]);
 
 [@react.component]
 let make = () => {
@@ -36,7 +50,7 @@ let make = () => {
     //         }
     //     )
     //   }
-
+  let data =
     switch(queryData.cards.edges) {
       | [||] => <div>{ReasonReact.string("Nada")}</div>
       | edges => 
@@ -46,11 +60,15 @@ let make = () => {
           | _ => None;
           }
             ) -> Belt.Array.map(item =>
-                <div key=item.name>
-                  {ReasonReact.string(item.name)}
-                </div>
+                <li key=item.name>
+                  <Card image=item.image />
+                </li>
               ) -> React.array;
-    }
+    };
+
+  <ul className=cardsContainerStyle>
+    data
+  </ul>
     
     // let elements = (~edges=?) => 
     //   switch edges {

@@ -23,6 +23,8 @@ let asideContainer =
   ]);
 
 [@react.component]
+
+
 let make = () => {
   <div className=navbarContainer>
     <Link href="/" name="reasonstone" strong=true />
