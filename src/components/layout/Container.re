@@ -4,10 +4,9 @@ let containerStyle =
   merge([
     style([
       display(flexBox),
-      paddingLeft(`percent(20.)),
-      paddingRight(`percent(20.)),
+      paddingLeft(`percent(15.)),
+      paddingRight(`percent(15.)),
       flexDirection(column),
-      alignItems(center),
     ]),
     "container"
   ]);

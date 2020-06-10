@@ -24,6 +24,7 @@
   "dependencies": {
     "bs-css": "^10.0.1",
     "bs-fetch": "^0.6.1",
+    "bs-webapi": "^0.15.9",
     "graphql": "^15.1.0",
     "react": "0.0.0-experimental-f6b8d31a7",
     "react-dom": "0.0.0-experimental-f6b8d31a7",
@@ -37,8 +38,8 @@
   },
   "devDependencies": {
     "bs-platform": "^7.3.2",
-    "moduleserve": "^0.9.0",
     "html-webpack-plugin": "^3.2.0",
+    "moduleserve": "^0.9.0",
     "webpack": "^4.0.1",
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.8"

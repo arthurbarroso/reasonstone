@@ -1,6 +1,6 @@
 [@react.component]
-let make = () =>
+let make = (~query) =>
   <Container>
     <Section />
-    <Cards />
+    <Cards query=query />
   </Container>
