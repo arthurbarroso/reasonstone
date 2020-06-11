@@ -60,24 +60,26 @@ module CardListFragment = [%relay.fragment
 let make = (~query as queryRef) => {
   let ReasonRelay.{data, hasNext, isLoadingNext, loadNext} = CardListFragment.usePagination(queryRef);
   let cardList = data.cards->CardListFragment.getConnectionNodes_cards;
-  // let (height, setHeight) = React.useState(_ => -1000);
+  let load = () => loadNext(~count=15, ()) |> ignore;
+  let debouncedLoadNext = Debouncer.make(~wait=5000, load);
   let pageBottom = (e) => scroller(e);
   let handleScroll = (e) => {
      if(pageBottom(e) && !isLoadingNext && hasNext){
+       /* Js.log("Handled the scroll event") */
        loadNext(~count=15, ()) |> ignore;
      }
    }
+   let refScroll = React.useRef(handleScroll)
 
-   let debounceScroll = Debouncer.make(~wait=5000, handleScroll);
+   /* let debounceScroll = Debouncer.make(~wait=5000, handleScroll); */
 
-   let bindEvent = () =>
-     Document.addEventListener("scroll", debounceScroll, document);
+   /* let bindEvent = () =>
+     Document.addEventListener("scroll", (e) => if(pageBottom(e) && !isLoadingNext && hasNext){loadNext(~count=15,()) |> ignore}, document); */
 
-   React.useEffect0(() => {
-     bindEvent();
-
-     Some(() => Js.log("Failed binding scroll listener"));
-   })
+    React.useEffect1(() => {
+      Document.addEventListener("scroll", handleScroll, document);
+      Some(() => Document.removeEventListener("scroll", handleScroll, document));
+    }, [|handleScroll|]);
 
 
   let dataToShow =
