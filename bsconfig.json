@@ -19,7 +19,9 @@
     "bs-css",
     "reason-relay",
     "reason-promise",
-    "bs-fetch"
+    "bs-fetch",
+    "bs-webapi",
+    "re-debouncer"
   ],
   "ppx-flags": ["reason-relay/ppx"],
   "refmt": 3

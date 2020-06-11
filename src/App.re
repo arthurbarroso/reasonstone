@@ -2,10 +2,10 @@ open Css;
 
 module Query = [%relay.query
   {|
-    query AppQuery {
-      __typename
-    }
-  |}
+  query AppQuery {
+    ...Cards_query
+  }
+|}
 ];
 
 let baseStyle =
@@ -18,19 +18,17 @@ let baseStyle =
 
 [@react.component]
 let make = () => {
-    let url = ReasonReactRouter.useUrl();
+  let url = ReasonReactRouter.useUrl();
+
+  let query = Query.use(~variables=(), ());
 
   let page =
     switch(url.path){
-    | [] => <Home />
+    | [] => <Home query={query.getFragmentRefs()} />
     | ["login"] => <div>{"Login" |> ReasonReact.string}</div>
     | _ => <div>{"Page not found" |> ReasonReact.string}</div>
     };
-
-  let loading = <Loading />;
     <div className=baseStyle>
-      <ReactExperimental.Suspense fallback=loading>
         page
-      </ReactExperimental.Suspense>
     </div>
 }

@@ -1,20 +1,6 @@
 open Css;
-
-module CardsQuery = [%relay.query{|
-    query CardsQuery {
-      cards {
-        edges {
-          node {
-            text
-            name
-            image
-            manaCost
-          }
-        }
-      }
-    }
-  |}];
-
+open Utils;
+open Webapi.Dom;
 
 let cardsContainerStyle =
   merge([
@@ -22,82 +8,97 @@ let cardsContainerStyle =
       display(flexBox),
       flexDirection(row),
       justifyContent(center),
-      width(`percent(120.0)),
       flexWrap(wrap),
       listStyle(`none, `inside, `none),
+      padding(px(0)),
     ]),
     "cards-container"
   ]);
 
-[@react.component]
-let make = () => {
-    let queryData = CardsQuery.use(~variables=(), ());
-
-    // let item =
-    //   switch(edge){
-    //     | Some(node) => {ReasonReact.string(node.name)};
-    //     | None => React.null;
-    //   }
-
-    // let parseData = (~edges=?) =>
-    //   switch(edges){
-    //     | None => React.null;
-    //     | Some(edges) =>
-    //       edges->Belt.Array.keepMap(edge =>
-    //         switch (edge) {
-    //           | Some({node: Some(node)}) => Some(node);
-    //           | _ => None;
-    //         }
-    //     )
-    //   }
-  let data =
-    switch(queryData.cards.edges) {
-      | [||] => <div>{ReasonReact.string("Nada")}</div>
-      | edges => 
-        edges -> Belt.Array.keepMap(edge =>
-        switch(edge){
-          | Some({node: Some(node)})  => Some(node);
-          | _ => None;
-          }
-            ) -> Belt.Array.map(item =>
-                <li key=item.name>
-                  <Card image=item.image />
-                </li>
-              ) -> React.array;
-    };
-
-  <ul className=cardsContainerStyle>
-    data
-  </ul>
+  
+  let outsideContainerStyle =
+    merge([
+      style([
+        display(flexBox),
+        flexDirection(column),
+      ]),
+      "outside-container"
+    ]);
     
-    // let elements = (~edges=?) => 
-    //   switch edges {
-    //     | None => React.null;
-    //     | Some(edges) => 
-    //       edges->Belt.Array.map(edge => {
-    //         switch(edge) {
-    //           | None => React.null;
-    //           | Some(edge) =>
-    //             switch(edge) {
-    //               | Some(node) => <div>{ReasonReact.string("node")}</div>
-    //               | None => <div>{ReasonReact.string("no node")}</div>
-    //             };
-    //           }
-    //       })->React.array
-    //   };
 
-    // switch(queryData.cards.edges) {
-    //   | [||] => <div>{ReasonReact.string("Nada")}</div>
-    //   | edges => elements(~edges=edges)
-    // }
+
+module CardListFragment = [%relay.fragment
+  {|
+  fragment Cards_query on Query
+    @refetchable(queryName: "CardsRefetchQuery")
+    @argumentDefinitions(
+      count: { type: "Int!", defaultValue: 40 }
+      cursor: { type: "String!", defaultValue: "" }
+    ) {
+    cards(first: $count, after: $cursor) @connection(key: "Cards_query_cards") {
+      edges {
+        node {
+          id
+          image
+        }
+        cursor
+      }
+    }
+  }
+  |}
+];
+
+ type action =
+   | Update;
+
+ type state = {
+   currentHeight: int
+ };
+
+
+[@react.component]
+let make = (~query as queryRef) => {
+  let ReasonRelay.{data, hasNext, isLoadingNext, loadNext} = CardListFragment.usePagination(queryRef);
+  let cardList = data.cards->CardListFragment.getConnectionNodes_cards;
+  let load = () => loadNext(~count=15, ()) |> ignore;
+  let debouncedLoadNext = Debouncer.make(~wait=5000, load);
+  let pageBottom = (e) => scroller(e);
+  let handleScroll = (e) => {
+     if(pageBottom(e) && !isLoadingNext && hasNext){
+       /* Js.log("Handled the scroll event") */
+       loadNext(~count=15, ()) |> ignore;
+     }
+   }
+   let refScroll = React.useRef(handleScroll)
+
+   /* let debounceScroll = Debouncer.make(~wait=5000, handleScroll); */
+
+   /* let bindEvent = () =>
+     Document.addEventListener("scroll", (e) => if(pageBottom(e) && !isLoadingNext && hasNext){loadNext(~count=15,()) |> ignore}, document); */
+
+    React.useEffect1(() => {
+      Document.addEventListener("scroll", handleScroll, document);
+      Some(() => Document.removeEventListener("scroll", handleScroll, document));
+    }, [|handleScroll|]);
+
+
+  let dataToShow =
+    {cardList
+      -> Belt.Array.map(card => 
+        <Card image=card.image />)
+          } -> React.array;
+
+
+    <div className=outsideContainerStyle>
+      <ul className=cardsContainerStyle>
+        dataToShow
+      </ul>
+      /* {hasNext ?
+        <Button
+          text="Load more cards!"
+          onClick={_ => loadNext(~count=30, ()) |> ignore} />
+        :
+        React.null
+      } */
+    </div>
 }
-
-
-          // {
-          //   edges
-          //   ->Belt.Array.map(node =>
-          //       <li key={node.name}> {React.string(node.text)} </li>
-          //     )
-          //   /* Since everything is typed, the arrays need to be, too! */
-          //   ->React.array
-          // }

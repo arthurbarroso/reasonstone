@@ -5,7 +5,18 @@ module Types = {
     getFragmentRefs:
       unit => {. "__$fragment_ref__Cards_query": Cards_query_graphql.t},
   };
-  type variables = unit;
+  type refetchVariables = {
+    count: option(int),
+    cursor: option(string),
+  };
+  let makeRefetchVariables = (~count=?, ~cursor=?, ()): refetchVariables => {
+    count,
+    cursor,
+  };
+  type variables = {
+    count: int,
+    cursor: string,
+  };
 };
 
 module Internal = {
@@ -37,7 +48,10 @@ module Internal = {
 
 type preloadToken;
 
-module Utils = {};
+module Utils = {
+  open Types;
+  let makeVariables = (~count, ~cursor): variables => {count, cursor};
+};
 
 type operationType = ReasonRelay.queryNode;
 
@@ -45,43 +59,68 @@ let node: operationType = [%raw
   {json| (function(){
 var v0 = [
   {
-    "kind": "Literal",
-    "name": "after",
-    "value": ""
+    "kind": "LocalArgument",
+    "name": "count",
+    "type": "Int!",
+    "defaultValue": 40
   },
   {
-    "kind": "Literal",
+    "kind": "LocalArgument",
+    "name": "cursor",
+    "type": "String!",
+    "defaultValue": ""
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cursor"
+  },
+  {
+    "kind": "Variable",
     "name": "first",
-    "value": 40
+    "variableName": "count"
   }
 ];
 return {
   "kind": "Request",
   "fragment": {
     "kind": "Fragment",
-    "name": "AppQuery",
+    "name": "CardsRefetchQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "FragmentSpread",
         "name": "Cards_query",
-        "args": null
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "count",
+            "variableName": "count"
+          },
+          {
+            "kind": "Variable",
+            "name": "cursor",
+            "variableName": "cursor"
+          }
+        ]
       }
     ]
   },
   "operation": {
     "kind": "Operation",
-    "name": "AppQuery",
-    "argumentDefinitions": [],
+    "name": "CardsRefetchQuery",
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "cards",
-        "storageKey": "cards(after:\"\",first:40)",
-        "args": (v0/*: any*/),
+        "storageKey": null,
+        "args": (v1/*: any*/),
         "concreteType": "CardConnection",
         "plural": false,
         "selections": [
@@ -166,7 +205,7 @@ return {
         "kind": "LinkedHandle",
         "alias": null,
         "name": "cards",
-        "args": (v0/*: any*/),
+        "args": (v1/*: any*/),
         "handle": "connection",
         "key": "Cards_query_cards",
         "filters": null
@@ -175,10 +214,13 @@ return {
   },
   "params": {
     "operationKind": "query",
-    "name": "AppQuery",
+    "name": "CardsRefetchQuery",
     "id": null,
-    "text": "query AppQuery {\n  ...Cards_query\n}\n\nfragment Cards_query on Query {\n  cards(first: 40, after: \"\") {\n    edges {\n      node {\n        id\n        image\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
-    "metadata": {}
+    "text": "query CardsRefetchQuery(\n  $count: Int! = 40\n  $cursor: String! = \"\"\n) {\n  ...Cards_query_1G22uz\n}\n\nfragment Cards_query_1G22uz on Query {\n  cards(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        image\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
+    "metadata": {
+      "derivedFrom": "Cards_query",
+      "isRefetchableQuery": true
+    }
   }
 };
 })() |json}

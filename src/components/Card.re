@@ -5,7 +5,7 @@ let make = (~image: option(string)=?) => {
   let cardImg =
     switch(image){
       | None => React.null;
-      | Some(image) => <img src=image alt="card-image" />
+      | Some(image) => <img key=image src=image alt="card-image" />
     };
 /* 
     let cardName =
