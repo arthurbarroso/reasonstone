@@ -7,6 +7,7 @@ let containerStyle =
       paddingLeft(`percent(15.)),
       paddingRight(`percent(15.)),
       flexDirection(column),
+      height(`percent(100.))
     ]),
     "container"
   ]);

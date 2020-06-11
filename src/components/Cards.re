@@ -1,6 +1,6 @@
 open Css;
-// open Utils;
-// open Webapi.Dom;
+open Utils;
+open Webapi.Dom;
 
 let cardsContainerStyle =
   merge([
@@ -10,7 +10,7 @@ let cardsContainerStyle =
       justifyContent(center),
       flexWrap(wrap),
       listStyle(`none, `inside, `none),
-      padding(px(0))
+      padding(px(0)),
     ]),
     "cards-container"
   ]);
@@ -47,54 +47,36 @@ module CardListFragment = [%relay.fragment
   |}
 ];
 
-// type action =
-//   | Update;
+ type action =
+   | Update;
 
-// type state = {
-//   currentHeight: int
-// };
+ type state = {
+   currentHeight: int
+ };
 
 
 [@react.component]
 let make = (~query as queryRef) => {
-
-  // let (state, dispatch) = 
-  //   React.useReducer((state, action) =>
-  //     switch (action) {
-  //       | Update => {currentHeight: state.currentHeight +1800}
-  //     },
-  //     {currentHeight: 1800},
-  //   );
-
-    
-  //let cardList = CardListFragment.use(queryRef);
   let ReasonRelay.{data, hasNext, isLoadingNext, loadNext} = CardListFragment.usePagination(queryRef);
   let cardList = data.cards->CardListFragment.getConnectionNodes_cards;
   // let (height, setHeight) = React.useState(_ => -1000);
-  // let pageBottom = (e) => bottomDistance (e) >= state.currentHeight;
-  // let handleScroll = (e) => {
-  //   dispatch(Update);
-  //   let x = bottomDistance(e);
-  //   Js.log("ScrollY atual")
-  //   Js.log(x);
-  //   Js.log("currentHeight atual");
-  //   Js.log(state.currentHeight);
-  //   if(pageBottom(e) && !isLoadingNext && hasNext){
-  //     // Js.log("Under height");
-  //     // Js.log("height atual")
-  //     // Js.log(state.currentHeight)
-  //     loadNext(~count=30, ()) |> ignore;
-  //   };
-  
-  // }
-  // let bindEvent = () =>
-  //   Document.addEventListener("scroll", handleScroll, document);
+  let pageBottom = (e) => scroller(e);
+  let handleScroll = (e) => {
+     if(pageBottom(e) && !isLoadingNext && hasNext){
+       loadNext(~count=15, ()) |> ignore;
+     }
+   }
 
-  // React.useEffect0(() => {
-  //   bindEvent();
+   let debounceScroll = Debouncer.make(~wait=5000, handleScroll);
 
-  //   Some(() => Js.log("Failed binding scroll listener"));
-  // })
+   let bindEvent = () =>
+     Document.addEventListener("scroll", debounceScroll, document);
+
+   React.useEffect0(() => {
+     bindEvent();
+
+     Some(() => Js.log("Failed binding scroll listener"));
+   })
 
 
   let dataToShow =

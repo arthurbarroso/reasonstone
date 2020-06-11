@@ -26,6 +26,7 @@
     "bs-fetch": "^0.6.1",
     "bs-webapi": "^0.15.9",
     "graphql": "^15.1.0",
+    "re-debouncer": "^2.1.0",
     "react": "0.0.0-experimental-f6b8d31a7",
     "react-dom": "0.0.0-experimental-f6b8d31a7",
     "react-relay": "0.0.0-experimental-8cc94ddc",

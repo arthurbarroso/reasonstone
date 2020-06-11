@@ -21,7 +21,8 @@ let centerButtonStyle = (isHovering: bool) => {
       borderWidth(px(0)),
       height(px(48)),
       padding(px(8)),
-      width(px(240))
+      width(px(240)),
+      cursor(`pointer)
     ]),
     "center-button"
   ]);
