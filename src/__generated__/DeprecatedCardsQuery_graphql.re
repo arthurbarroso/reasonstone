@@ -81,7 +81,7 @@ return {
   "kind": "Request",
   "fragment": {
     "kind": "Fragment",
-    "name": "CardsQuery",
+    "name": "DeprecatedCardsQuery",
     "type": "Query",
     "metadata": null,
     "argumentDefinitions": [],
@@ -127,7 +127,7 @@ return {
   },
   "operation": {
     "kind": "Operation",
-    "name": "CardsQuery",
+    "name": "DeprecatedCardsQuery",
     "argumentDefinitions": [],
     "selections": [
       {
@@ -178,9 +178,9 @@ return {
   },
   "params": {
     "operationKind": "query",
-    "name": "CardsQuery",
+    "name": "DeprecatedCardsQuery",
     "id": null,
-    "text": "query CardsQuery {\n  cards {\n    edges {\n      node {\n        text\n        name\n        image\n        manaCost\n        id\n      }\n    }\n  }\n}\n",
+    "text": "query DeprecatedCardsQuery {\n  cards {\n    edges {\n      node {\n        text\n        name\n        image\n        manaCost\n        id\n      }\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

@@ -5,7 +5,10 @@ module Types = {
     id: string,
     image: string,
   };
-  type fragment_cards_edges = {node: option(fragment_cards_edges_node)};
+  type fragment_cards_edges = {
+    node: option(fragment_cards_edges_node),
+    cursor: string,
+  };
   type fragment_cards = {edges: array(option(fragment_cards_edges))};
 
   type fragment = {cards: fragment_cards};

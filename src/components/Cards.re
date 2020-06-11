@@ -41,6 +41,7 @@ module CardListFragment = [%relay.fragment
           id
           image
         }
+        cursor
       }
     }
   }
@@ -90,12 +91,12 @@ let make = (~query as queryRef) => {
       <ul className=cardsContainerStyle>
         dataToShow
       </ul>
-      {hasNext ?
+      /* {hasNext ?
         <Button
           text="Load more cards!"
           onClick={_ => loadNext(~count=30, ()) |> ignore} />
         :
         React.null
-      }
+      } */
     </div>
 }

@@ -1,7 +1,7 @@
 open Css;
 
 module CardsQuery = [%relay.query{|
-    query CardsQuery {
+    query DeprecatedCardsQuery {
       cards {
         edges {
           node {
