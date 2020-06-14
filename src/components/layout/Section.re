@@ -5,14 +5,14 @@ let sectionStyle =
     style([
       display(flexBox),
       flexDirection(column),
-      alignItems(center),
-      width(`percent(100.))
+      width(auto),
+      padding4(~top=`percent(0.), ~right=`percent(8.), ~bottom=`percent(6.), ~left=`percent(8.)),      
     ]),
     "section-style"
   ]);
 
 [@react.component]
-let make = (~title: option(string)=?, ~content: option(string)=?) => {
+let make = (~child: option(React.element)=?, ~title: option(string)=?, ~content: option(string)=?, ) => {
 
   let sectionTitle =
     switch(title){
@@ -26,8 +26,15 @@ let make = (~title: option(string)=?, ~content: option(string)=?) => {
       | None => React.null;
     };
 
+  let children =
+    switch(child) {
+      | Some(child) => child;
+      | None => React.null
+    };
+
   <section className=sectionStyle>
     sectionTitle
     sectionContent
+    children
   </section>
 }

@@ -29,7 +29,7 @@ let make = () => {
   <div className=navbarContainer>
     <Link href="/" name="reasonstone" strong=true />
     <div className=asideContainer>
-      <Link href="/" name="about" />
+      <Link href="/about" name="about" />
       <Link href="/" name="contact" />
     </div>
   </div>

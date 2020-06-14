@@ -60,8 +60,6 @@ module CardListFragment = [%relay.fragment
 let make = (~query as queryRef) => {
   let ReasonRelay.{data, hasNext, isLoadingNext, loadNext} = CardListFragment.usePagination(queryRef);
   let cardList = data.cards->CardListFragment.getConnectionNodes_cards;
-  let load = () => loadNext(~count=15, ()) |> ignore;
-  let debouncedLoadNext = Debouncer.make(~wait=5000, load);
   let pageBottom = (e) => scroller(e);
   let handleScroll = (e) => {
      if(pageBottom(e) && !isLoadingNext && hasNext){
@@ -69,7 +67,6 @@ let make = (~query as queryRef) => {
        loadNext(~count=15, ()) |> ignore;
      }
    }
-   let refScroll = React.useRef(handleScroll)
 
    /* let debounceScroll = Debouncer.make(~wait=5000, handleScroll); */
 
