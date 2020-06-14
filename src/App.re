@@ -26,7 +26,8 @@ let make = () => {
     switch(url.path){
     | [] => <Home query={query.getFragmentRefs()} />;
     | ["about"] => <About />;
-    | _ => <div>{"Page not found" |> ReasonReact.string}</div>
+    | ["contact"] => <Contact />;
+    | _ => <div>{"Page not found" |> ReasonReact.string}</div>;
     };
     <div className=baseStyle>
         page

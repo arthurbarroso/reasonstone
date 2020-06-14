@@ -30,7 +30,7 @@ let make = () => {
     <Link href="/" name="reasonstone" strong=true />
     <div className=asideContainer>
       <Link href="/about" name="about" />
-      <Link href="/" name="contact" />
+      <Link href="/contact" name="contact" />
     </div>
   </div>
 };
